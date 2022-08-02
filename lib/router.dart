@@ -14,6 +14,10 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       return MaterialPageRoute(
         builder: (context) => OTPScreen(verificationId: verificationId),
       );
+    case UserInfoScreen.routeName:
+      return MaterialPageRoute(
+        builder: (context) => const UserInfoScreen(),
+      );
     default:
       return MaterialPageRoute(
         builder: (context) => const Scaffold(

@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:whats_app_clone/common/common.dart';
+import 'package:whats_app_clone/features/auth/auth.dart';
 import 'package:whats_app_clone/features/features.dart';
 
 final authRepositoryProvider = Provider(
@@ -38,6 +39,30 @@ class AuthRepository {
           );
         }),
         codeAutoRetrievalTimeout: (String verificationId) {},
+      );
+    } on FirebaseAuthException catch (e) {
+      showSnackBar(
+        context: context,
+        text: e.message!,
+      );
+    }
+  }
+
+  void verifyOTP({
+    required BuildContext context,
+    required String verificationId,
+    required String userOTP,
+  }) async {
+    final navigator = Navigator.of(context);
+    try {
+      PhoneAuthCredential credential = PhoneAuthProvider.credential(
+        verificationId: verificationId,
+        smsCode: userOTP,
+      );
+      await auth.signInWithCredential(credential);
+      navigator.pushNamedAndRemoveUntil(
+        UserInfoScreen.routeName,
+        (route) => false,
       );
     } on FirebaseAuthException catch (e) {
       showSnackBar(
