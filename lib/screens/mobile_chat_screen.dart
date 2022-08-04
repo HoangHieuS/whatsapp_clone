@@ -1,21 +1,45 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:whats_app_clone/features/auth/auth.dart';
 
-import '../common/constants/constants.dart';
-import '../info.dart';
+import '../common/common.dart';
+import '../models/models.dart';
 import '../widgets/widgets.dart';
 
-
-class MobileChatScreen extends StatelessWidget {
-  const MobileChatScreen({Key? key}) : super(key: key);
+class MobileChatScreen extends ConsumerWidget {
+  static const String routeName = '/mobile-chat-screen';
+  final String name;
+  final String uid;
+  const MobileChatScreen({
+    Key? key,
+    required this.name,
+    required this.uid,
+  }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: appBarColor,
-        title: Text(
-          info[0]['name'].toString(),
-        ),
+        title: StreamBuilder<UserModel>(
+            stream: ref.read(authControllerProvider).userDataById(uid),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Loader();
+              }
+              return Column(
+                children: [
+                  Text(name),
+                  Text(
+                    snapshot.data!.isOnline ? 'online' : 'offline',
+                    style: const TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.normal,
+                    ),
+                  ),
+                ],
+              );
+            }),
         centerTitle: false,
         actions: [
           IconButton(
@@ -43,16 +67,28 @@ class MobileChatScreen extends StatelessWidget {
               fillColor: mobileChatBoxColor,
               prefixIcon: const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 20.0),
-                child: Icon(Icons.emoji_emotions, color: Colors.grey,),
+                child: Icon(
+                  Icons.emoji_emotions,
+                  color: Colors.grey,
+                ),
               ),
               suffixIcon: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: const [
-                    Icon(Icons.camera_alt, color: Colors.grey,),
-                    Icon(Icons.attach_file, color: Colors.grey,),
-                    Icon(Icons.money, color: Colors.grey,),
+                    Icon(
+                      Icons.camera_alt,
+                      color: Colors.grey,
+                    ),
+                    Icon(
+                      Icons.attach_file,
+                      color: Colors.grey,
+                    ),
+                    Icon(
+                      Icons.money,
+                      color: Colors.grey,
+                    ),
                   ],
                 ),
               ),
