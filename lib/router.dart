@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:whats_app_clone/features/features.dart';
 
 import 'common/common.dart';
-import 'screens/mobile_chat_screen.dart';
+import 'features/chat/screens/mobile_chat_screen.dart';
 
 Route<dynamic> generateRoute(RouteSettings settings) {
   switch (settings.name) {

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../common/constants/constants.dart';
+import '../features/features.dart';
 import '../info.dart';
-import '../screens/screens.dart';
 
 
 class ContactsList extends StatelessWidget {

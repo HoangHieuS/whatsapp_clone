@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:whats_app_clone/features/auth/auth.dart';
 
-import '../common/common.dart';
-import '../models/models.dart';
-import '../widgets/widgets.dart';
+import '../../../common/common.dart';
+import '../../../models/models.dart';
+import '../../../widgets/widgets.dart';
+import '../../features.dart';
 
 class MobileChatScreen extends ConsumerWidget {
   static const String routeName = '/mobile-chat-screen';
@@ -61,50 +61,11 @@ class MobileChatScreen extends ConsumerWidget {
           const Expanded(
             child: ChatList(),
           ),
-          TextField(
-            decoration: InputDecoration(
-              filled: true,
-              fillColor: mobileChatBoxColor,
-              prefixIcon: const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20.0),
-                child: Icon(
-                  Icons.emoji_emotions,
-                  color: Colors.grey,
-                ),
-              ),
-              suffixIcon: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: const [
-                    Icon(
-                      Icons.camera_alt,
-                      color: Colors.grey,
-                    ),
-                    Icon(
-                      Icons.attach_file,
-                      color: Colors.grey,
-                    ),
-                    Icon(
-                      Icons.money,
-                      color: Colors.grey,
-                    ),
-                  ],
-                ),
-              ),
-              hintText: 'Type a message!',
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(20.0),
-                borderSide: const BorderSide(
-                  width: 0,
-                  style: BorderStyle.none,
-                ),
-              ),
-              contentPadding: const EdgeInsets.all(10),
-            ),
-          ),
+          BottomChatField(),
         ],
       ),
     );
   }
 }
+
+
