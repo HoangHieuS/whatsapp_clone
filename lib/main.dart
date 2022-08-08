@@ -34,7 +34,7 @@ class MyApp extends ConsumerWidget {
         appBarTheme: const AppBarTheme(color: appBarColor),
       ),
       onGenerateRoute: (settings) => generateRoute(settings),
-      home: ref.watch(userProvider).when(
+      home: ref.watch(userAuthProvider).when(
             data: (user) {
               if (user == null) {
                 return const LandingScreen();
@@ -42,7 +42,9 @@ class MyApp extends ConsumerWidget {
               return const MobileLayoutScreen();
             },
             error: (err, trace) {
-              return ErrorNotice(error: err.toString(),);
+              return ErrorNotice(
+                error: err.toString(),
+              );
             },
             loading: () => const Loader(),
           ),

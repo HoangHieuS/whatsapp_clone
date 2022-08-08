@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:whats_app_clone/features/chat/chat.dart';
 
 import '../../../common/common.dart';
 
 class BottomChatField extends ConsumerStatefulWidget {
-  const BottomChatField({Key? key}) : super(key: key);
+  final String receiverUid;
+  const BottomChatField({
+    Key? key,
+    required this.receiverUid,
+  }) : super(key: key);
 
   @override
   ConsumerState<BottomChatField> createState() => _BottomChatFieldState();
@@ -12,6 +17,26 @@ class BottomChatField extends ConsumerStatefulWidget {
 
 class _BottomChatFieldState extends ConsumerState<BottomChatField> {
   bool isShowSendButton = false;
+  final TextEditingController _messController = TextEditingController();
+
+  void sendTextMess() async {
+    if (isShowSendButton) {
+      ref.read(chatControllerProvider).sendTextMessage(
+            context,
+            _messController.text.trim(),
+            widget.receiverUid,
+          );
+      setState(() {
+        _messController.text = '';
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _messController.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,6 +44,7 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
       children: [
         Expanded(
           child: TextFormField(
+            controller: _messController,
             onChanged: (val) {
               if (val.isNotEmpty) {
                 setState(() {
@@ -100,9 +126,12 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
           child: CircleAvatar(
             backgroundColor: const Color(0xFF128C7E),
             radius: 25,
-            child: Icon(
-              isShowSendButton ? Icons.send : Icons.mic,
-              color: Colors.white,
+            child: GestureDetector(
+              onTap: sendTextMess,
+              child: Icon(
+                isShowSendButton ? Icons.send : Icons.mic,
+                color: Colors.white,
+              ),
             ),
           ),
         ),
