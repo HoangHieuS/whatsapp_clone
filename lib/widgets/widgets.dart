@@ -1,5 +1,4 @@
-export 'chat_list.dart';
-export 'contacts_list.dart';
+export '../features/chat/widgets/contacts_list.dart';
 export 'my_message_card.dart';
 export 'sender_message_card.dart';
 export 'web_chat_appbar.dart';

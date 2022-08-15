@@ -59,39 +59,41 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(18),
-        child: Column(
-          children: [
-            const Text('WhatsApp will need to veirfy your phone number.'),
-            const SizedBox(height: 10),
-            TextButton(
-              onPressed: pickCountry,
-              child: const Text('Pick country'),
-            ),
-            const SizedBox(height: 10),
-            Row(
-              children: [
-                if (country != null) Text('+${country!.phoneCode}'),
-                const SizedBox(width: 10),
-                SizedBox(
-                  width: size.width * 0.7,
-                  child: TextField(
-                    controller: _phoneController,
-                    decoration: const InputDecoration(
-                      hintText: 'phone number',
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              const Text('WhatsApp will need to veirfy your phone number.'),
+              const SizedBox(height: 10),
+              TextButton(
+                onPressed: pickCountry,
+                child: const Text('Pick country'),
+              ),
+              const SizedBox(height: 10),
+              Row(
+                children: [
+                  if (country != null) Text('+${country!.phoneCode}'),
+                  const SizedBox(width: 10),
+                  SizedBox(
+                    width: size.width * 0.7,
+                    child: TextField(
+                      controller: _phoneController,
+                      decoration: const InputDecoration(
+                        hintText: 'phone number',
+                      ),
                     ),
                   ),
-                ),
-              ],
-            ),
-            SizedBox(height: size.height * 0.6),
-            SizedBox(
-              width: 90,
-              child: CustomButton(
-                text: 'NEXT',
-                onPressed: sendOTPNumber,
+                ],
               ),
-            ),
-          ],
+              SizedBox(height: size.height * 0.6),
+              SizedBox(
+                width: 90,
+                child: CustomButton(
+                  text: 'NEXT',
+                  onPressed: sendOTPNumber,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

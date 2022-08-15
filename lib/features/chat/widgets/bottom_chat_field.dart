@@ -30,6 +30,7 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
         _messController.text = '';
       });
     }
+    print('tapped');
   }
 
   @override

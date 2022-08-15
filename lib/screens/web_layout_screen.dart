@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../common/constants/constants.dart';
+import '../features/features.dart';
 import '../widgets/widgets.dart';
 
 class WebLayoutScreen extends StatelessWidget {
@@ -41,7 +42,7 @@ class WebLayoutScreen extends StatelessWidget {
                 const ChatAppBar(),
                 const SizedBox(height: 20),
                 const Expanded(
-                  child: ChatList(),
+                  child: ChatList(receiverUid: '',),
                 ),
                 Container(
                   height: MediaQuery.of(context).size.height * 0.07,

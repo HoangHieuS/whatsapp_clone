@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:whats_app_clone/models/chat_contact.dart';
+import 'package:whats_app_clone/models/message.dart';
 
 import '../../features.dart';
 
@@ -19,6 +21,14 @@ class ChatController {
     required this.chatRepo,
     required this.ref,
   });
+
+  Stream<List<ChatContact>> chatContacts() {
+    return chatRepo.getChatContact();
+  }
+
+  Stream<List<Message>> chatStream(String receiverUid) {
+    return chatRepo.getChatStream(receiverUid);
+  }
 
   void sendTextMessage(
     BuildContext context,

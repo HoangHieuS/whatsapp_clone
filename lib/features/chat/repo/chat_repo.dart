@@ -23,9 +23,58 @@ class ChatRepo {
     required this.auth,
   });
 
+  Stream<List<ChatContact>> getChatContact() {
+    return firestore
+        .collection('users')
+        .doc(auth.currentUser!.uid)
+        .collection('chats')
+        .snapshots()
+        .asyncMap((event) async {
+      List<ChatContact> contacts = [];
+      for (var document in event.docs) {
+        var chatContact = ChatContact.fromMap(document.data());
+        var userData = await firestore
+            .collection('users')
+            .doc(chatContact.contactId)
+            .get();
+        var user = UserModel.fromMap(userData.data()!);
+
+        contacts.add(
+          ChatContact(
+            name: user.name,
+            profileImgUrl: user.profileImg,
+            contactId: chatContact.contactId,
+            timeSent: chatContact.timeSent,
+            lastMessage: chatContact.lastMessage,
+          ),
+        );
+      }
+      return contacts;
+    });
+  }
+
+  Stream<List<Message>> getChatStream(String receiverUid) {
+    return firestore
+        .collection('users')
+        .doc(auth.currentUser!.uid)
+        .collection('chats')
+        .doc(receiverUid)
+        .collection('messages')
+        .orderBy('timeSent')
+        .snapshots()
+        .map((event) {
+      List<Message> messages = [];
+      for (var document in event.docs) {
+        var msg = Message.fromMap(document.data());
+        messages.add(msg);
+      }
+      return messages;
+    });
+  }
+
   void _saveDataToContactSubcollection(
     UserModel senderUser,
-    UserModel receiverUser,
+    UserModel? receiverUser,
     String text,
     DateTime timeSent,
     String receiverUid,
@@ -41,8 +90,6 @@ class ChatRepo {
     await firestore
         .collection('users')
         .doc(receiverUid)
-        .collection('contacts')
-        .doc(senderUser.uid)
         .collection('chats')
         .doc(auth.currentUser!.uid)
         .set(
@@ -51,7 +98,7 @@ class ChatRepo {
 
     //display message for yourself
     var senderChatContact = ChatContact(
-      name: receiverUser.name,
+      name: receiverUser!.name,
       profileImgUrl: receiverUser.profileImg,
       contactId: receiverUser.uid,
       timeSent: timeSent,
@@ -60,8 +107,6 @@ class ChatRepo {
     await firestore
         .collection('users')
         .doc(auth.currentUser!.uid)
-        .collection('contacts')
-        .doc(senderUser.uid)
         .collection('chats')
         .doc(receiverUid)
         .set(
@@ -75,7 +120,7 @@ class ChatRepo {
     required DateTime timeSent,
     required String messageId,
     required String username,
-    required String receiverUsername,
+    required String? receiverUsername,
     required MessageEnum messageType,
   }) async {
     final message = Message(
@@ -87,6 +132,7 @@ class ChatRepo {
       messageId: messageId,
       isSeen: false,
     );
+
     await firestore
         .collection('users')
         .doc(auth.currentUser!.uid)
