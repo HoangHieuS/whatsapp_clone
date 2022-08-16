@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -188,6 +190,72 @@ class ChatRepo {
         username: senderUSer.name,
         receiverUsername: receiverUser.name,
         messageType: MessageEnum.text,
+      );
+    } catch (e) {
+      showSnackBar(
+        context: context,
+        text: e.toString(),
+      );
+    }
+  }
+
+  void sendFileMessage({
+    required BuildContext context,
+    required File file,
+    required String receiverUid,
+    required UserModel senderUser,
+    required ProviderRef ref,
+    required MessageEnum messageEnum,
+  }) async {
+    try {
+      var timeSent = DateTime.now();
+      var msgId = const Uuid().v1();
+
+      String imgUrl =
+          await ref.read(firebaseStorageRepoProvider).storeFileToFirebase(
+                'chat/${messageEnum.type}/${senderUser.uid}/$receiverUid/$msgId',
+                file,
+              );
+
+      UserModel receiverUser;
+      var userDataMap =
+          await firestore.collection('users').doc(receiverUid).get();
+      receiverUser = UserModel.fromMap(userDataMap.data()!);
+
+      String contactMsg;
+
+      switch (messageEnum) {
+        case MessageEnum.image:
+          contactMsg = '📷 Photo';
+          break;
+        case MessageEnum.video:
+          contactMsg = '📸 Video';
+          break;
+        case MessageEnum.audio:
+          contactMsg = '🎵 Audio';
+          break;
+        case MessageEnum.gif:
+          contactMsg = 'GIF';
+          break;
+        default:
+          contactMsg = 'GIF';
+      }
+      _saveDataToContactSubcollection(
+        senderUser,
+        receiverUser,
+        contactMsg,
+        timeSent,
+        receiverUid,
+      );
+
+      _saveMessageToMessageSubcollection(
+        receiverUid: receiverUid,
+        text: imgUrl,
+        timeSent: timeSent,
+        messageId: msgId,
+        username: senderUser.name,
+        receiverUsername: receiverUser.name,
+        messageType: messageEnum,
       );
     } catch (e) {
       showSnackBar(
