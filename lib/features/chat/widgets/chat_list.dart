@@ -28,7 +28,7 @@ class _ChatListState extends ConsumerState<ChatList> {
     _msgController.dispose();
   }
 
-  @override
+  @override 
   Widget build(BuildContext context) {
     return StreamBuilder<List<Message>>(
       stream: ref.read(chatControllerProvider).chatStream(widget.receiverUid),

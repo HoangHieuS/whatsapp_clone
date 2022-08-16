@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../common/common.dart';
 import '../../../models/models.dart';
-import '../../../widgets/widgets.dart';
 import '../../features.dart';
 
 class MobileChatScreen extends ConsumerWidget {
