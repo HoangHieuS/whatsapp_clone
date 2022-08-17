@@ -2,6 +2,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:whats_app_clone/common/common.dart';
 
+import '../../features.dart';
+
 class DisplayMessage extends StatelessWidget {
   final String msg;
   final MessageEnum type;
@@ -18,6 +20,10 @@ class DisplayMessage extends StatelessWidget {
             msg,
             style: const TextStyle(fontSize: 16),
           )
-        : CachedNetworkImage(imageUrl: msg);
+        : type == MessageEnum.video
+            ? VideoPlayerItem(videoUrl: msg)
+            : type == MessageEnum.gif
+                ? CachedNetworkImage(imageUrl: msg)
+                : CachedNetworkImage(imageUrl: msg);
   }
 }

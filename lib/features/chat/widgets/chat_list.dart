@@ -6,7 +6,6 @@ import 'package:intl/intl.dart';
 import 'package:whats_app_clone/common/common.dart';
 import 'package:whats_app_clone/features/features.dart';
 import 'package:whats_app_clone/models/models.dart';
-import 'package:whats_app_clone/widgets/widgets.dart';
 
 class ChatList extends ConsumerStatefulWidget {
   final String receiverUid;
