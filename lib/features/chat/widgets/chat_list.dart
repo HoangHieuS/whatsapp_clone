@@ -27,7 +27,21 @@ class _ChatListState extends ConsumerState<ChatList> {
     _msgController.dispose();
   }
 
-  @override 
+  void onMessageSwipe(
+    String msg,
+    bool isMe,
+    MessageEnum msgEnum,
+  ) {
+    ref.read(msgReplyProvider.state).update(
+          (state) => MessageReply(
+            msg,
+            isMe,
+            msgEnum,
+          ),
+        );
+  }
+
+  @override
   Widget build(BuildContext context) {
     return StreamBuilder<List<Message>>(
       stream: ref.read(chatControllerProvider).chatStream(widget.receiverUid),
@@ -46,17 +60,43 @@ class _ChatListState extends ConsumerState<ChatList> {
           itemBuilder: (context, index) {
             final msgData = snapshot.data![index];
             var timeSent = DateFormat.Hm().format(msgData.timeSent);
+
+            if (!msgData.isSeen &&
+                msgData.receiverId == FirebaseAuth.instance.currentUser!.uid) {
+              ref.read(chatControllerProvider).setChatMsgSeen(
+                    context,
+                    widget.receiverUid,
+                    msgData.messageId,
+                  );
+            }
             if (msgData.senderId == FirebaseAuth.instance.currentUser!.uid) {
               return MyMessageCard(
                 message: msgData.text,
                 date: timeSent,
                 type: msgData.type,
+                repliedText: msgData.repliedMessage,
+                username: msgData.repliedTo,
+                repliedMsgType: msgData.repliedMessageType,
+                onLeftSwipe: () => onMessageSwipe(
+                  msgData.text,
+                  true,
+                  msgData.type,
+                ),
+                isSeen: msgData.isSeen,
               );
             }
             return SenderMessageCard(
               message: msgData.text,
               date: timeSent,
               type: msgData.type,
+              repliedText: msgData.repliedMessage,
+              username: msgData.repliedTo,
+              repliedMsgType: msgData.repliedMessageType,
+              onRightSwipe: () => onMessageSwipe(
+                msgData.text,
+                false,
+                msgData.type,
+              ),
             );
           },
         );

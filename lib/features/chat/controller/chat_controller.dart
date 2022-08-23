@@ -38,14 +38,17 @@ class ChatController {
     String text,
     String receiverUid,
   ) {
+    final msgReply = ref.read(msgReplyProvider);
     ref.read(userAuthProvider).whenData(
           (value) => chatRepo.sendTextMessage(
             context: context,
             text: text,
             receiverUid: receiverUid,
             senderUser: value!,
+            msgReply: msgReply,
           ),
         );
+    ref.read(msgReplyProvider.state).update((state) => null);
   }
 
   void sendFileMessage(
@@ -54,6 +57,8 @@ class ChatController {
     String receiverUid,
     MessageEnum messageEnum,
   ) {
+    final msgReply = ref.read(msgReplyProvider);
+
     ref.read(userAuthProvider).whenData(
           (value) => chatRepo.sendFileMessage(
             context: context,
@@ -62,8 +67,10 @@ class ChatController {
             senderUser: value!,
             messageEnum: messageEnum,
             ref: ref,
+            msgReply: msgReply,
           ),
         );
+    ref.read(msgReplyProvider.state).update((state) => null);
   }
 
   void sendGIFMessage(
@@ -74,6 +81,7 @@ class ChatController {
     int gifUrlPartIndex = gifUrl.lastIndexOf('-') + 1;
     String gifUrlPart = gifUrl.substring(gifUrlPartIndex);
     String newGifUrl = 'https://i.giphy.com/media/$gifUrlPart/200.gif';
+    final msgReply = ref.read(msgReplyProvider);
 
     ref.read(userAuthProvider).whenData(
           (value) => chatRepo.sendGIFMessage(
@@ -81,7 +89,17 @@ class ChatController {
             gifUrl: newGifUrl,
             receiverUid: receiverUid,
             senderUser: value!,
+            msgReply: msgReply,
           ),
         );
+    ref.read(msgReplyProvider.state).update((state) => null);
+  }
+
+  void setChatMsgSeen(
+    BuildContext context,
+    String receiverUid,
+    String msgId,
+  ) {
+    chatRepo.setChatMessageSeen(context, receiverUid, msgId,);
   }
 }

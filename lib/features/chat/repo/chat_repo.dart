@@ -122,8 +122,10 @@ class ChatRepo {
     required DateTime timeSent,
     required String messageId,
     required String username,
-    required String? receiverUsername,
     required MessageEnum messageType,
+    required MessageReply? messageReply,
+    required String senderUsername,
+    required String? receiverUsername,
   }) async {
     final message = Message(
       senderId: auth.currentUser!.uid,
@@ -133,6 +135,14 @@ class ChatRepo {
       timeSent: timeSent,
       messageId: messageId,
       isSeen: false,
+      repliedMessage: messageReply == null ? '' : messageReply.msg,
+      repliedTo: messageReply == null
+          ? ''
+          : messageReply.isMe
+              ? senderUsername
+              : receiverUsername ?? '',
+      repliedMessageType:
+          messageReply == null ? MessageEnum.text : messageReply.msgEnum,
     );
 
     await firestore
@@ -163,6 +173,7 @@ class ChatRepo {
     required String text,
     required String receiverUid,
     required UserModel senderUser,
+    required MessageReply? msgReply,
   }) async {
     try {
       var timeSent = DateTime.now();
@@ -190,6 +201,8 @@ class ChatRepo {
         username: senderUser.name,
         receiverUsername: receiverUser.name,
         messageType: MessageEnum.text,
+        messageReply: msgReply,
+        senderUsername: senderUser.name,
       );
     } catch (e) {
       showSnackBar(
@@ -206,6 +219,7 @@ class ChatRepo {
     required UserModel senderUser,
     required ProviderRef ref,
     required MessageEnum messageEnum,
+    required MessageReply? msgReply,
   }) async {
     try {
       var timeSent = DateTime.now();
@@ -256,6 +270,8 @@ class ChatRepo {
         username: senderUser.name,
         receiverUsername: receiverUser.name,
         messageType: messageEnum,
+        senderUsername: senderUser.name,
+        messageReply: msgReply,
       );
     } catch (e) {
       showSnackBar(
@@ -270,6 +286,7 @@ class ChatRepo {
     required String gifUrl,
     required String receiverUid,
     required UserModel senderUser,
+    required MessageReply? msgReply,
   }) async {
     try {
       var timeSent = DateTime.now();
@@ -297,7 +314,40 @@ class ChatRepo {
         username: senderUser.name,
         receiverUsername: receiverUser.name,
         messageType: MessageEnum.gif,
+        senderUsername: senderUser.name,
+        messageReply: msgReply,
       );
+    } catch (e) {
+      showSnackBar(
+        context: context,
+        text: e.toString(),
+      );
+    }
+  }
+
+  void setChatMessageSeen(
+    BuildContext context,
+    String receiverUid,
+    String msgId,
+  ) async {
+    try {
+      await firestore
+          .collection('users')
+          .doc(auth.currentUser!.uid)
+          .collection('chats')
+          .doc(receiverUid)
+          .collection('messages')
+          .doc(msgId)
+          .update({'isSeen': true});
+
+      await firestore
+          .collection('users')
+          .doc(receiverUid)
+          .collection('chats')
+          .doc(auth.currentUser!.uid)
+          .collection('messages')
+          .doc(msgId)
+          .update({'isSeen': true});
     } catch (e) {
       showSnackBar(
         context: context,
