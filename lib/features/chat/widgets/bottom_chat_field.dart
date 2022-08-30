@@ -6,7 +6,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_sound/public/flutter_sound_recorder.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:whats_app_clone/common/providers/message_reply_provider.dart';
 import 'package:whats_app_clone/features/features.dart';
 
 import '../../../common/common.dart';

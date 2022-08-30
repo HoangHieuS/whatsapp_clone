@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:whats_app_clone/features/features.dart';
 
@@ -28,6 +30,12 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       final uid = args['uid'];
       return MaterialPageRoute(
         builder: (context) =>  MobileChatScreen(name: name, uid: uid,),
+      );
+    case ConfirmStatusScreen.routeName:
+      final file = settings.arguments as File;
+      
+      return MaterialPageRoute(
+        builder: (context) =>  ConfirmStatusScreen(file: file),
       );
     default:
       return MaterialPageRoute(
