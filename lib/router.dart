@@ -2,8 +2,10 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:whats_app_clone/features/features.dart';
+import 'package:whats_app_clone/features/group/group.dart';
 
 import 'common/common.dart';
+import 'models/models.dart';
 
 Route<dynamic> generateRoute(RouteSettings settings) {
   switch (settings.name) {
@@ -29,13 +31,25 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       final name = args['name'];
       final uid = args['uid'];
       return MaterialPageRoute(
-        builder: (context) =>  MobileChatScreen(name: name, uid: uid,),
+        builder: (context) => MobileChatScreen(
+          name: name,
+          uid: uid,
+        ),
       );
     case ConfirmStatusScreen.routeName:
       final file = settings.arguments as File;
-      
+
       return MaterialPageRoute(
-        builder: (context) =>  ConfirmStatusScreen(file: file),
+        builder: (context) => ConfirmStatusScreen(file: file),
+      );
+    case StatusScreen.routeName:
+      final status = settings.arguments as Status;
+      return MaterialPageRoute(
+        builder: (context) => StatusScreen(status: status),
+      );
+    case CreateGroupScreen.routeName:
+      return MaterialPageRoute(
+        builder: (context) => const CreateGroupScreen(),
       );
     default:
       return MaterialPageRoute(
