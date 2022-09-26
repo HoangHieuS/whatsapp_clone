@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:whats_app_clone/features/features.dart';
-import 'package:whats_app_clone/features/group/group.dart';
 
 import '../common/constants/constants.dart';
 

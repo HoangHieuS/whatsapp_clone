@@ -9,10 +9,12 @@ class MobileChatScreen extends ConsumerWidget {
   static const String routeName = '/mobile-chat-screen';
   final String name;
   final String uid;
+  final bool isGroupChat;
   const MobileChatScreen({
     Key? key,
     required this.name,
     required this.uid,
+    required this.isGroupChat,
   }) : super(key: key);
 
   @override
@@ -20,7 +22,7 @@ class MobileChatScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: appBarColor,
-        title: StreamBuilder<UserModel>(
+        title: isGroupChat ? Text(name) : StreamBuilder<UserModel>(
             stream: ref.read(authControllerProvider).userDataById(uid),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
@@ -57,18 +59,18 @@ class MobileChatScreen extends ConsumerWidget {
       ),
       body: Column(
         children: [
-           Expanded(
+          Expanded(
             child: ChatList(
               receiverUid: uid,
+              isGroupChat: isGroupChat,
             ),
           ),
           BottomChatField(
             receiverUid: uid,
+            isGroupChat: isGroupChat,
           ),
         ],
       ),
     );
   }
 }
-
-

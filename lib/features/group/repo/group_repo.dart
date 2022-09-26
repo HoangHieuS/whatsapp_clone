@@ -63,7 +63,7 @@ class GroupRepo {
         timeSent: DateTime.now(),
       );
 
-      await firestore.collection('group').doc(groupId).set(group.toMap());
+      await firestore.collection('groups').doc(groupId).set(group.toMap());
     } catch (e) {
       showSnackBar(
         context: context,

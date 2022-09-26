@@ -12,9 +12,12 @@ import '../../../common/common.dart';
 
 class BottomChatField extends ConsumerStatefulWidget {
   final String receiverUid;
+  final bool isGroupChat;
+
   const BottomChatField({
     Key? key,
     required this.receiverUid,
+    required this.isGroupChat,
   }) : super(key: key);
 
   @override
@@ -52,6 +55,7 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
             context,
             _messController.text.trim(),
             widget.receiverUid,
+            widget.isGroupChat,
           );
       setState(() {
         _messController.text = '';
@@ -60,7 +64,7 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
       var tempDir = await getTemporaryDirectory();
       var path = '${tempDir.path}/flutter_sound.aac';
       if (!isRecorderInit) {
-        return;
+        return null;
       }
       if (isRecording) {
         await _soundRecorder!.stopRecorder();
@@ -87,6 +91,7 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
           file,
           widget.receiverUid,
           messageEnum,
+          widget.isGroupChat,
         );
   }
 
@@ -112,6 +117,7 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
             context,
             gif.url,
             widget.receiverUid,
+            widget.isGroupChat,
           );
     }
   }
@@ -145,8 +151,9 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
   void dispose() {
     super.dispose();
     _messController.dispose();
+    
     _soundRecorder!.closeRecorder();
-    isRecorderInit = false;
+    _soundRecorder = null;
   }
 
   @override

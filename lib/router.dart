@@ -2,8 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:whats_app_clone/features/features.dart';
-import 'package:whats_app_clone/features/group/group.dart';
-
+  
 import 'common/common.dart';
 import 'models/models.dart';
 
@@ -30,10 +29,12 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       final args = settings.arguments as Map<String, dynamic>;
       final name = args['name'];
       final uid = args['uid'];
+      final isGroupChat = args['isGroupChat'];
       return MaterialPageRoute(
         builder: (context) => MobileChatScreen(
           name: name,
           uid: uid,
+          isGroupChat: isGroupChat,
         ),
       );
     case ConfirmStatusScreen.routeName:

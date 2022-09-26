@@ -9,9 +9,11 @@ import 'package:whats_app_clone/models/models.dart';
 
 class ChatList extends ConsumerStatefulWidget {
   final String receiverUid;
+  final bool isGroupChat;
   const ChatList({
     Key? key,
     required this.receiverUid,
+    required this.isGroupChat,
   }) : super(key: key);
 
   @override
@@ -44,7 +46,9 @@ class _ChatListState extends ConsumerState<ChatList> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<List<Message>>(
-      stream: ref.read(chatControllerProvider).chatStream(widget.receiverUid),
+      stream: widget.isGroupChat
+          ? ref.read(chatControllerProvider).groupChatStream(widget.receiverUid)
+          : ref.read(chatControllerProvider).chatStream(widget.receiverUid),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Loader();

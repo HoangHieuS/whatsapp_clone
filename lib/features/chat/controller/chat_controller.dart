@@ -3,9 +3,8 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:whats_app_clone/common/common.dart';
-import 'package:whats_app_clone/models/chat_contact.dart';
-import 'package:whats_app_clone/models/message.dart';
 
+import '../../../models/models.dart';
 import '../../features.dart';
 
 final chatControllerProvider = Provider((ref) {
@@ -29,14 +28,23 @@ class ChatController {
     return chatRepo.getChatContact();
   }
 
+  Stream<List<Group>> chatGroups() {
+    return chatRepo.getChatGroups();
+  }
+
   Stream<List<Message>> chatStream(String receiverUid) {
     return chatRepo.getChatStream(receiverUid);
+  }
+
+  Stream<List<Message>> groupChatStream(String groupId) {
+    return chatRepo.getGroupChatStream(groupId);
   }
 
   void sendTextMessage(
     BuildContext context,
     String text,
     String receiverUid,
+    bool isGroupChat,
   ) {
     final msgReply = ref.read(msgReplyProvider);
     ref.read(userAuthProvider).whenData(
@@ -46,6 +54,7 @@ class ChatController {
             receiverUid: receiverUid,
             senderUser: value!,
             msgReply: msgReply,
+            isGroupChat: isGroupChat,
           ),
         );
     ref.read(msgReplyProvider.state).update((state) => null);
@@ -56,6 +65,7 @@ class ChatController {
     File file,
     String receiverUid,
     MessageEnum messageEnum,
+    bool isGroupChat,
   ) {
     final msgReply = ref.read(msgReplyProvider);
 
@@ -68,6 +78,7 @@ class ChatController {
             messageEnum: messageEnum,
             ref: ref,
             msgReply: msgReply,
+            isGroupChat: isGroupChat,
           ),
         );
     ref.read(msgReplyProvider.state).update((state) => null);
@@ -77,6 +88,7 @@ class ChatController {
     BuildContext context,
     String gifUrl,
     String receiverUid,
+    bool isGroupChat,
   ) {
     int gifUrlPartIndex = gifUrl.lastIndexOf('-') + 1;
     String gifUrlPart = gifUrl.substring(gifUrlPartIndex);
@@ -90,6 +102,7 @@ class ChatController {
             receiverUid: receiverUid,
             senderUser: value!,
             msgReply: msgReply,
+            isGroupChat: isGroupChat,
           ),
         );
     ref.read(msgReplyProvider.state).update((state) => null);
@@ -100,6 +113,10 @@ class ChatController {
     String receiverUid,
     String msgId,
   ) {
-    chatRepo.setChatMessageSeen(context, receiverUid, msgId,);
+    chatRepo.setChatMessageSeen(
+      context,
+      receiverUid,
+      msgId,
+    );
   }
 }
