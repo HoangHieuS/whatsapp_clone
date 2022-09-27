@@ -19,7 +19,7 @@ class GroupController {
     required this.ref,
   });
 
-  void creaGroup(BuildContext context, String name, File profileImg,
+  void creatGroup(BuildContext context, String name, File profileImg,
       List<Contact> selectedContact) {
     groupRepo.createGroup(context, name, profileImg, selectedContact,);
   }

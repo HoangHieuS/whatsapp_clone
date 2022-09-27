@@ -25,7 +25,7 @@ class _CreateGroupScreenState extends ConsumerState<CreateGroupScreen> {
 
   void createGroup() {
     if (_groupNameController.text.trim().isNotEmpty && image != null) {
-      ref.read(groupControllerProvider).creaGroup(
+      ref.read(groupControllerProvider).creatGroup(
             context,
             _groupNameController.text.trim(),
             image!,
